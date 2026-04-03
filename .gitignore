@@ -1,0 +1,13 @@
+# Catkin build artifacts
+build/
+devel/
+install/
+logs/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Editor/temp
+*.swp
+.vscode/

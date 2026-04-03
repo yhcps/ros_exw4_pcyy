@@ -1,0 +1,10 @@
+<launch>
+  <arg name="xacro_file" default="$(find pcyy_robot_description)/urdf/simple_robot.xacro" />
+  <arg name="generated_urdf" default="/tmp/simple_robot_from_xacro.urdf" />
+
+  <!-- 先将 xacro 展开为 urdf -->
+  <node pkg="xacro" type="xacro" name="xacro_to_urdf" args="$(arg xacro_file) -o $(arg generated_urdf)" output="screen" />
+
+  <!-- 再对生成的 urdf 做结构检查 -->
+  <node pkg="urdf" type="check_urdf" name="check_urdf" args="$(arg generated_urdf)" output="screen" />
+</launch>

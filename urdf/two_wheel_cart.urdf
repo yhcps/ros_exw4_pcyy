@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<robot name="two_wheel_cart">
+  <!-- =========================
+       基本尺寸（单位：m）
+       车体: 0.50 x 0.35 x 0.12
+       轮子: 半径 0.08, 厚度 0.05
+       坐标系: x前, y左, z上
+       ========================= -->
+
+  <material name="mat_chassis">
+    <color rgba="0.2 0.35 0.8 1.0"/>
+  </material>
+  <material name="mat_wheel">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+
+  <!-- 车体 -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="8.0"/>
+      <inertia ixx="0.091267" ixy="0.0" ixz="0.0" iyy="0.176267" iyz="0.0" izz="0.248333"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.14" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.50 0.35 0.12"/>
+      </geometry>
+      <material name="mat_chassis"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.14" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.50 0.35 0.12"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- 左轮 -->
+  <link name="left_wheel_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.001808" ixy="0.0" ixz="0.0" iyy="0.003200" iyz="0.0" izz="0.001808"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.08" length="0.05"/>
+      </geometry>
+      <material name="mat_wheel"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.08" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- 右轮 -->
+  <link name="right_wheel_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.001808" ixy="0.0" ixz="0.0" iyy="0.003200" iyz="0.0" izz="0.001808"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.08" length="0.05"/>
+      </geometry>
+      <material name="mat_wheel"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.08" length="0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- 轮距 = 0.30 m，轮心高度 = 0.08 m -->
+  <joint name="left_wheel_joint" type="continuous">
+    <origin xyz="0 0.15 0.08" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="30.0" velocity="25.0"/>
+    <dynamics damping="0.2" friction="0.1"/>
+  </joint>
+
+  <joint name="right_wheel_joint" type="continuous">
+    <origin xyz="0 -0.15 0.08" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <axis xyz="0 1 0"/>
+    <limit effort="30.0" velocity="25.0"/>
+    <dynamics damping="0.2" friction="0.1"/>
+  </joint>
+
+  <!-- Gazebo 轮地接触参数 -->
+  <gazebo reference="left_wheel_link">
+    <mu1>1.1</mu1>
+    <mu2>1.1</mu2>
+    <kp>100000.0</kp>
+    <kd>5.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.5</maxVel>
+  </gazebo>
+
+  <gazebo reference="right_wheel_link">
+    <mu1>1.1</mu1>
+    <mu2>1.1</mu2>
+    <kp>100000.0</kp>
+    <kd>5.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.5</maxVel>
+  </gazebo>
+
+  <!-- Gazebo 差速运动参数（速度/加速度/扭矩约束） -->
+  <gazebo>
+    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+      <updateRate>100</updateRate>
+
+      <leftJoint>left_wheel_joint</leftJoint>
+      <rightJoint>right_wheel_joint</rightJoint>
+
+      <wheelSeparation>0.30</wheelSeparation>
+      <wheelDiameter>0.16</wheelDiameter>
+
+      <max_wheel_torque>30.0</max_wheel_torque>
+      <max_wheel_acceleration>12.0</max_wheel_acceleration>
+
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
+      <publishWheelTF>false</publishWheelTF>
+      <publishOdomTF>true</publishOdomTF>
+      <legacyMode>false</legacyMode>
+    </plugin>
+  </gazebo>
+</robot>

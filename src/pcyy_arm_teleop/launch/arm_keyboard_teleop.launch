@@ -1,0 +1,20 @@
+<launch>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+
+  <include file="$(find zx_description)/launch/w2a.launch">
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+  </include>
+
+  <node pkg="pcyy_arm_teleop" type="arm_keyboard_teleop.py" name="arm_keyboard_teleop" output="screen">
+    <rosparam command="load" file="$(find pcyy_arm_teleop)/config/arm_teleop.yaml"/>
+    <param name="command_topic" value="/arm_joint_controller/command"/>
+    <param name="step_rad" value="0.08"/>
+    <param name="trajectory_time" value="0.45"/>
+  </node>
+</launch>

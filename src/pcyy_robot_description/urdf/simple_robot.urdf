@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<robot name="simple_robot">
+  <!-- 坐标系: x前, y左, z上 -->
+
+  <material name="chassis_blue">
+    <color rgba="0.2 0.4 0.8 1.0"/>
+  </material>
+  <material name="wheel_black">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+  <material name="caster_gray">
+    <color rgba="0.6 0.6 0.6 1.0"/>
+  </material>
+
+  <!-- 底盘 -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="6.0"/>
+      <inertia ixx="0.071875" ixy="0" ixz="0" iyy="0.140625" iyz="0" izz="0.190000"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.10" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.45 0.30 0.10"/>
+      </geometry>
+      <material name="chassis_blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.10" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.45 0.30 0.10"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- 左轮 -->
+  <link name="wheel_left_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.8"/>
+      <inertia ixx="0.001184" ixy="0" ixz="0" iyy="0.002000" iyz="0" izz="0.001184"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.07" length="0.04"/>
+      </geometry>
+      <material name="wheel_black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.07" length="0.04"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- 右轮 -->
+  <link name="wheel_right_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.8"/>
+      <inertia ixx="0.001184" ixy="0" ixz="0" iyy="0.002000" iyz="0" izz="0.001184"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.07" length="0.04"/>
+      </geometry>
+      <material name="wheel_black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0"/>
+      <geometry>
+        <cylinder radius="0.07" length="0.04"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- 万向轮（简化为球） -->
+  <link name="caster_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.25"/>
+      <inertia ixx="0.000245" ixy="0" ixz="0" iyy="0.000245" iyz="0" izz="0.000245"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.035"/>
+      </geometry>
+      <material name="caster_gray"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.035"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- 关节：左右轮 revolute，绕Y轴 -->
+  <joint name="wheel_left_joint" type="revolute">
+    <origin xyz="0 0.15 0.07" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="wheel_left_link"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1000" upper="1000" effort="20" velocity="20"/>
+    <dynamics damping="0.1" friction="0.05"/>
+  </joint>
+
+  <joint name="wheel_right_joint" type="revolute">
+    <origin xyz="0 -0.15 0.07" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="wheel_right_link"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1000" upper="1000" effort="20" velocity="20"/>
+    <dynamics damping="0.1" friction="0.05"/>
+  </joint>
+
+  <!-- 万向轮 fixed -->
+  <joint name="caster_joint" type="fixed">
+    <origin xyz="-0.16 0 0.035" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="caster_link"/>
+  </joint>
+</robot>

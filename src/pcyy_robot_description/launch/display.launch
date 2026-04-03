@@ -1,0 +1,16 @@
+<launch>
+  <arg name="rviz_config" default="$(find pcyy_robot_description)/rviz/simple_robot.rviz" />
+  <arg name="xacro_file" default="$(find pcyy_robot_description)/urdf/simple_robot.xacro" />
+
+  <!-- 通过 xacro 生成 robot_description -->
+  <param name="robot_description" command="$(find xacro)/xacro $(arg xacro_file)" />
+
+  <!-- 发布 TF -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen" />
+
+  <!-- 提供关节状态（可在GUI中拖动左右轮） -->
+  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" output="screen" />
+
+  <!-- RViz 可视化 -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_config)" output="screen" />
+</launch>

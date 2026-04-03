@@ -1,0 +1,32 @@
+joint_names: [joint_1, joint_2, joint_3, joint_4, joint_5]
+
+joint_limits:
+  joint_1: [-1.8, 1.8]
+  joint_2: [-1.8, 1.8]
+  joint_3: [-1.8, 1.8]
+  joint_4: [-1.8, 1.8]
+  joint_5: [-1.8, 1.8]
+
+step_rad: 0.08
+trajectory_time: 0.45
+command_topic: /arm_joint_controller/command
+joint_state_topic: /joint_states
+
+# rqt_joint_trajectory_controller 逆向思路：
+# 将“调节关节目标值”的动作映射为按键输入。
+# 每次按键增量 = delta * step_rad
+key_bindings:
+  "1": {joint: joint_1, delta: 1}
+  "q": {joint: joint_1, delta: -1}
+  "2": {joint: joint_2, delta: 1}
+  "w": {joint: joint_2, delta: -1}
+  "3": {joint: joint_3, delta: 1}
+  "e": {joint: joint_3, delta: -1}
+  "4": {joint: joint_4, delta: 1}
+  "r": {joint: joint_4, delta: -1}
+  "5": {joint: joint_5, delta: 1}
+  "t": {joint: joint_5, delta: -1}
+
+reset_key: z
+help_key: h
+exit_key: x

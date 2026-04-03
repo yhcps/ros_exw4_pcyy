@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <material name="lidar_red">
+    <color rgba="0.85 0.1 0.1 1.0"/>
+  </material>
+
+  <!-- PPT要求：添加一个简单激光雷达（圆柱，fixed） -->
+  <xacro:macro name="simple_lidar" params="">
+    <link name="lidar_link">
+      <xacro:cylinder_inertial mass="${lidar_mass}" radius="${lidar_radius}" length="${lidar_height}"/>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${lidar_radius}" length="${lidar_height}"/>
+        </geometry>
+        <material name="lidar_red"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${lidar_radius}" length="${lidar_height}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="lidar_joint" type="fixed">
+      <origin xyz="${lidar_x_offset} 0 ${lidar_z_offset}" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="lidar_link"/>
+    </joint>
+  </xacro:macro>
+</robot>
